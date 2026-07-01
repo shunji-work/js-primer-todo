@@ -8,7 +8,7 @@ btn.addEventListener('click', () => {
   const id = Date.now();
   todos.push({ id, text });
   render();
-  input.value = "";
+  input.value = '';
 });
 
 function render() {
@@ -18,5 +18,14 @@ function render() {
     const li = document.createElement('li');
     li.textContent = todo.text;
     ul.appendChild(li);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = '削除';
+    li.appendChild(deleteButton);
+
+    deleteButton.addEventListener('click', () => {
+      todos = todos.filter((t) => t.id !== todo.id);
+      render();
+    });
   });
 }
