@@ -100,3 +100,23 @@
 - `todo.done` はそれ自体が `true` / `false` なので、条件としてそのまま使える
 
 次回は、完了トグルまわりを見ずに再実装して、理解を固める。
+
+## 2026-07-01 Milestone 5
+
+今日は、Todoを `localStorage` に保存して、リロードしても残るようにした。
+
+できたこと:
+
+- `STORAGE_KEY` で保存名を決めた
+- `localStorage.getItem` で起動時に保存データを読んだ
+- 保存データがあるときだけ `JSON.parse` で配列に戻した
+- `render()` の最後で `localStorage.setItem` を使って保存した
+- `JSON.stringify` で `todos` 配列を文字列にして保存した
+- 最後に `render()` を呼んで、読み込んだTodoを画面に表示した
+
+今日の理解:
+
+- `localStorage` は文字列しか保存できない
+- 保存するときは `JSON.stringify`
+- 読み込むときは `JSON.parse`
+- `STORAGE_KEY` は保存場所の名前で、`todos` は実際の配列

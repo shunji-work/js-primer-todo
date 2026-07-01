@@ -2,6 +2,12 @@ const btn = document.querySelector('#add-btn');
 const input = document.querySelector('#todo-input');
 const ul = document.querySelector('#todo-list');
 let todos = [];
+const STORAGE_KEY = 'todos';
+const savedTodos = localStorage.getItem(STORAGE_KEY);
+
+if (savedTodos !== null) {
+  todos = JSON.parse(savedTodos);
+}
 
 btn.addEventListener('click', () => {
   const text = input.value;
@@ -51,4 +57,8 @@ function render() {
       render();
     });
   });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
+
+render();
