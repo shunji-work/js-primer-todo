@@ -3,11 +3,6 @@ const input = document.querySelector('#todo-input');
 const ul = document.querySelector('#todo-list');
 let todos = [];
 const STORAGE_KEY = 'todos';
-const savedTodos = localStorage.getItem(STORAGE_KEY);
-
-if (savedTodos !== null) {
-  todos = JSON.parse(savedTodos);
-}
 
 btn.addEventListener('click', () => {
   const text = input.value;
@@ -61,4 +56,33 @@ function render() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
-render();
+//awaitを使うためにasyncをつけておく//
+async function loadTodos(){
+  const savedTodos = localStorage.getItem(STORAGE_KEY);
+//STORAGE_KEYは最初に定義した今触るTodos//
+
+  if (savedTodos !== null) {
+  todos = JSON.parse(savedTodos);
+  
+  render();
+}
+  //awaitを使うためにasyncをつけておく//
+  else{
+    console.log("保存ナシ")
+    
+    //awaitで長いapiの処理が終わるまでこの関数の進みを止める。ただし、この関数じゃないほかの処理は同時並行で進む//
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
+    console.log(response);
+
+    //apiで仮のデータ(response)を練習用に取ってきて、jsで使いやすいjsonという形に変える//
+    const apiTodos = await response.json();
+    console.log(apiTodos);
+    //apiの配列の形をこのコードで使ってるtodoと同じ形式にmapで書き換えてconvertedTodosに入れなおす//
+    const convertedTodos = apiTodos.map((apiTodos) => {
+      return 
+    });
+    console.log(loadTodos);
+  }
+}
+
+loadTodos();
