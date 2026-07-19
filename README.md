@@ -120,3 +120,44 @@
 - 保存するときは `JSON.stringify`
 - 読み込むときは `JSON.parse`
 - `STORAGE_KEY` は保存場所の名前で、`todos` は実際の配列
+
+## 2026-07-18 Milestone 6 前半
+
+今日は、非同期処理と `fetch` の基本を学んだ。
+
+できたこと:
+
+- `async` 関数の中で `await` を使う流れを確認した
+- `fetch` で練習用APIからTodoを取得した
+- `response` はTodo本体ではなく、通信結果を入れた箱だと理解した
+- `response.json()` でAPIのJSONをJavaScriptの配列へ変換した
+- `map` でAPIの形式 `{ id, title, completed }` を、アプリの形式 `{ id, text, done }` に変換した
+- `localStorage` に保存済みデータがある場合は、APIより優先する処理を確認した
+
+今日の理解:
+
+- `fetch` はPromise（あとで結果が届く約束）を返す
+- `await fetch()` は通信結果を待つ
+- `await response.json()` はレスポンス本文の変換を待つ
+- `localStorage` はブラウザ内に保存され、APIとは別の保存場所である
+
+## 2026-07-19 Milestone 6 完了
+
+今日は、API取得時の成功・失敗と画面表示を仕上げた。
+
+できたこと:
+
+- `response.ok` でHTTP通信が成功したか確認した
+- `throw new Error()` で取得失敗をエラーとして扱った
+- `try/catch` でHTTPエラーと通信エラーを受け取った
+- 読み込み中のメッセージを画面に表示した
+- 通信失敗時のメッセージを画面に表示した
+- APIから取得したTodoを `todos` に入れ、`render()` で表示・保存した
+- APIから取得したTodoでも、削除・追加・完了切り替えが動くことを確認できる形にした
+
+今日の理解:
+
+- `response.ok` は、返事が成功かどうかを確認する
+- `throw` はエラーを発生させる命令で、`catch` はそのエラーを受け取る場所である
+- `response.ok` は返事が来た場合、`catch` は返事自体が来ない場合も扱う
+- `loading`、成功、`error` はそれぞれ読み込み中・完了・失敗の状態である
