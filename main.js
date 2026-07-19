@@ -1,6 +1,7 @@
 const btn = document.querySelector('#add-btn');
 const input = document.querySelector('#todo-input');
 const ul = document.querySelector('#todo-list');
+const statusMessage = document.querySelector('#status-message');
 let todos = [];
 const STORAGE_KEY = 'todos';
 
@@ -52,36 +53,48 @@ function render() {
       render();
     });
   });
-
+  //localStorage.setItem(保存名, 保存する文字列);  JSON.stringify(JavaScriptのデータ);//
+  /*localStorage：ブラウザが用意している保存先
+setItem()：ブラウザが用意している保存メソッド
+JSON.stringify()：JavaScriptが用意している文字列変換(JSONに変える)メソッド*/
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
-//awaitを使うためにasyncをつけておく//
-async function loadTodos(){
+
+async function loadTodos() {
   const savedTodos = localStorage.getItem(STORAGE_KEY);
-//STORAGE_KEYは最初に定義した今触るTodos//
 
   if (savedTodos !== null) {
-  todos = JSON.parse(savedTodos);
-  
-  render();
-}
-  //awaitを使うためにasyncをつけておく//
-  else{
-    console.log("保存ナシ")
-    
-    //awaitで長いapiの処理が終わるまでこの関数の進みを止める。ただし、この関数じゃないほかの処理は同時並行で進む//
-    const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
-    console.log(response);
+    todos = JSON.parse(savedTodos);
+    statusMessage.textContent = '';
+    render();
+    return;
+  }
 
-    //apiで仮のデータ(response)を練習用に取ってきて、jsで使いやすいjsonという形に変える//
+  statusMessage.textContent = '読み込み中...';
+
+  try {
+    const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
+
+    if (!response.ok) {
+      throw new Error('Todoの取得に失敗');
+    }
+
     const apiTodos = await response.json();
-    console.log(apiTodos);
-    //apiの配列の形をこのコードで使ってるtodoと同じ形式にmapで書き換えてconvertedTodosに入れなおす//
-    const convertedTodos = apiTodos.map((apiTodos) => {
-      return 
+    const convertedTodos = apiTodos.map((apiTodo) => {
+      return {
+        id: apiTodo.id,
+        text: apiTodo.title,
+        done: apiTodo.completed,
+      };
     });
-    console.log(loadTodos);
+
+    todos = convertedTodos;
+    statusMessage.textContent = '';
+    render();
+  } catch (error) {
+    statusMessage.textContent = 'Todoの読み込みに失敗しました';
+    console.log('通信に失敗しました', error);
   }
 }
 
